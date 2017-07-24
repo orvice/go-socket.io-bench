@@ -4,11 +4,11 @@ socket.io bench tools
 ## Usage
 
 ```
-./go-socket.io-bench -addr=localhost -n=100 -s=50
+./go-socket.io-bench -addr=localhost -n=100 -s=50 -on=reply
 ```
 
 ## Rock with Docker
 
 ```
-docker run --rm -ti orvice/go-socket.io-bench go-socket.io-bench -addr=localhost -n=100 -s=50
+docker run --rm -ti orvice/go-socket.io-bench go-socket.io-bench -addr=localhost -n=100 -s=50 -on=reply
 ```
