@@ -1,19 +1,18 @@
 package main
 
 import (
-	"bufio"
 	"github.com/zhouhui8915/go-socket.io-client"
 	"log"
-	"os"
+	"time"
 )
 
-func client(uri, event string) {
+func client(uri, event string, ch chan struct{}) {
 
 	opts := &socketio_client.Options{
 		Transport: "websocket",
 		Query:     make(map[string]string), // @todo
 	}
-
+	log.Println("new connection")
 	client, err := socketio_client.NewClient(uri, opts)
 	if err != nil {
 		log.Printf("NewClient error:%v\n", err)
@@ -31,13 +30,18 @@ func client(uri, event string) {
 	})
 	client.On("disconnection", func() {
 		log.Printf("on disconnect\n")
+		ch <- struct{}{}
 	})
 
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		data, _, _ := reader.ReadLine()
-		command := string(data)
-		client.Emit("message", command)
-		log.Printf("send message:%v\n", command)
-	}
+	go func() {
+		for {
+			log.Println("ping...")
+			client.Emit("p", "ping")
+			time.Sleep(time.Second * time.Duration(10))
+		}
+	}()
+
+	time.Sleep(time.Second * time.Duration(waitSecond))
+	log.Println("close...")
+	ch <- struct{}{}
 }

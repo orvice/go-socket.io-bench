@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"sync"
-	"time"
 )
 
 var (
@@ -33,11 +32,13 @@ func main() {
 	for i := 0; i < clientNum; i++ {
 		wg.Add(1)
 		fmt.Println("start #", i)
-		go func() {
-			go client(addr, customOn)
-			time.Sleep(time.Second * time.Duration(waitSecond))
+		go func(i int) {
+			ch := make(chan struct{})
+			go client(addr, customOn, ch)
+			<-ch
+			log.Println("done #", i)
 			wg.Done()
-		}()
+		}(i)
 	}
 
 	wg.Wait()
