@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func client(uri string) {
+func client(uri, event string) {
 
 	opts := &socketio_client.Options{
 		Transport: "websocket",
@@ -26,8 +26,8 @@ func client(uri string) {
 	client.On("connection", func() {
 		log.Printf("on connect\n")
 	})
-	client.On("message", func(msg string) {
-		log.Printf("on message:%v\n", msg)
+	client.On(event, func(msg string) {
+		log.Printf("event: %s message:%v\n", event, msg)
 	})
 	client.On("disconnection", func() {
 		log.Printf("on disconnect\n")

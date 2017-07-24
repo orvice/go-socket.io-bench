@@ -6,3 +6,9 @@ socket.io bench tools
 ```
 ./go-socket.io-bench -addr=localhost -n=100 -s=50
 ```
+
+## Rock with Docker
+
+```
+docker run --rm -ti orvice/go-socket.io-bench go-socket.io-bench -addr=localhost -n=100 -s=50
+```
