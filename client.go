@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func client(uri, event string, ch chan struct{}) {
+func client(uri, event string, i int, ch chan struct{}) {
 
 	opts := &socketio_client.Options{
 		Transport: "websocket",
@@ -29,19 +29,19 @@ func client(uri, event string, ch chan struct{}) {
 		log.Printf("event: %s message:%v\n", event, msg)
 	})
 	client.On("disconnection", func() {
-		log.Printf("on disconnect\n")
+		log.Printf("on disconnect #%d \n", i)
 		ch <- struct{}{}
 	})
 
 	go func() {
 		for {
-			log.Println("ping...")
+			log.Println("ping...  #", i)
 			client.Emit("p", "ping")
 			time.Sleep(time.Second * time.Duration(10))
 		}
 	}()
 
 	time.Sleep(time.Second * time.Duration(waitSecond))
-	log.Println("close...")
+	log.Println("close... #", i)
 	ch <- struct{}{}
 }

@@ -34,7 +34,7 @@ func main() {
 		fmt.Println("start #", i)
 		go func(i int) {
 			ch := make(chan struct{})
-			go client(addr, customOn, ch)
+			go client(addr, customOn, i, ch)
 			<-ch
 			log.Println("done #", i)
 			wg.Done()
